@@ -1,0 +1,60 @@
+/*
+  Controlling a servo position using a potentiometer (variable resistor)
+
+  by Melissa Felderman
+
+*/
+#include <Servo.h> //includes servo library to control a servo
+
+Servo myServo; // create servo object to control a servo
+
+
+int LIGHT_PIN = A0; // analog pin used to connect the photocell
+
+void setup() {
+
+  Serial.begin(9600); // initialize serial communication at 9600 bits per second
+  pinMode(LIGHT_PIN, INPUT); //declares the photocell pin as an sensor
+  myServo.attach(9); // attaches the servo on pin 9 to the servo object
+
+}
+
+void loop() {
+
+  int position; //create a local variable to store the servo's position.
+  int sensorValue = analogRead(LIGHT_PIN);  // reads the value of the photocell
+  Serial.println(sensorValue);  // print out the value of the photocell
+  delay(1);  // delay in between reads for stability
+
+
+  // To control a servo, you give it the angle you'd like it
+  // to turn to. Servos cannot turn a full 360 degrees, but you
+  // can tell it to move anywhere between 0 and 180 degrees.
+
+  // Rotate while photocell sense light:
+
+  if (sensorValue > 900) {
+
+    // Tell servo to go to 180 degrees, stepping by one degrees
+    for (position = 0; position < 180; position += 1)
+    {
+      // Move to next position
+      myServo.write(position);
+      // Short pause to allow it to move
+      delay(20);
+    }
+
+    // Tell servo to go to 0 degrees, stepping by one degree
+    for (position = 180; position >= 0; position -= 1)
+    {
+      // Move to next position
+      myServo.write(position);
+      // Short pause to allow it to move
+      delay(200);
+    }
+  } else {
+    myServo.write(90); // tells servo to remain still
+
+  }
+
+}
